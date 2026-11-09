@@ -1,0 +1,58 @@
+[
+  {
+    "id":"undefined-name",
+    "before":"def total(price, tax):\n    return price + tax\n",
+    "after":"def total(price, tax):\n    return price + tax_rate\n",
+    "gold":[{"line":2,"kind":"undefined_name"}],
+    "replay":[{"line":2,"kind":"undefined_name","message":"tax_rate is undefined. Use the tax parameter."}]
+  },
+  {
+    "id":"unused-import",
+    "before":"def total(price, tax):\n    return price + tax\n",
+    "after":"import math\n\ndef total(price, tax):\n    return price + tax\n",
+    "gold":[{"line":1,"kind":"unused_import"}],
+    "replay":[]
+  },
+  {
+    "id":"wrong-total",
+    "before":"def invoice_total(subtotal, tax):\n    \"\"\"Return subtotal plus tax.\"\"\"\n    return subtotal + tax\n",
+    "after":"def invoice_total(subtotal, tax):\n    \"\"\"Return subtotal plus tax.\"\"\"\n    return subtotal - tax\n",
+    "gold":[{"line":3,"kind":"wrong_arithmetic"}],
+    "replay":[{"line":3,"kind":"wrong_arithmetic","message":"Subtracting tax reduces the total. The function contract requires addition."}]
+  },
+  {
+    "id":"threshold-boundary",
+    "before":"def free_shipping(total):\n    \"\"\"Orders of 500000 VND or more qualify.\"\"\"\n    return total >= 500000\n",
+    "after":"def free_shipping(total):\n    \"\"\"Orders of 500000 VND or more qualify.\"\"\"\n    return total > 500000\n",
+    "gold":[{"line":3,"kind":"boundary_error"}],
+    "replay":[{"line":3,"kind":"boundary_error","message":"An order of exactly 500000 VND would incorrectly pay for shipping."}]
+  },
+  {
+    "id":"missing-none-guard",
+    "before":"def user_name(user):\n    \"\"\"Return the name, or an empty string for None.\"\"\"\n    return '' if user is None else user['name']\n",
+    "after":"def user_name(user):\n    \"\"\"Return the name, or an empty string for None.\"\"\"\n    return user['name']\n",
+    "gold":[{"line":3,"kind":"missing_none_guard"}],
+    "replay":[{"line":3,"kind":"missing_none_guard","message":"The documented None input now raises TypeError."}]
+  },
+  {
+    "id":"clean-refactor",
+    "before":"def doubled(value):\n    \"\"\"Return twice an integer value.\"\"\"\n    return value + value\n",
+    "after":"def doubled(value):\n    \"\"\"Return twice an integer value.\"\"\"\n    return value * 2\n",
+    "gold":[],
+    "replay":[{"line":3,"kind":"wrong_arithmetic","message":"Simulated false alarm: claims integer multiplication changes the result."}]
+  },
+  {
+    "id":"clean-name",
+    "before":"def doubled(value):\n    return value * 2\n",
+    "after":"def doubled(number):\n    return number * 2\n",
+    "gold":[],
+    "replay":[]
+  },
+  {
+    "id":"old-lint-clean-change",
+    "before":"import math\n\ndef label():\n    return 'old'\n",
+    "after":"import math\n\ndef label():\n    return 'new'\n",
+    "gold":[],
+    "replay":[{"line":1,"kind":"unused_import","message":"Simulated finding on an unchanged line. It should be discarded."}]
+  }
+]
